@@ -19,6 +19,15 @@ export default function Home() {
             />      
           </div>
           <h1 className={styles.title}>Minha lista de Tarefas do dia-dia</h1>
+
+          <div className={styles.infoContent}>
+            <section className={styles.box}>
+              <span>+10 posts</span>
+            </section>
+            <section className={styles.box}>
+              <span>+100 Comentários</span>
+            </section>
+          </div>
       </main>
     </div>
   )
