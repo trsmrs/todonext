@@ -18,8 +18,10 @@ import {
     orderBy,
     where,
     onSnapshot,
-    doc
+    doc,
+    deleteDoc
 } from 'firebase/firestore'
+import Link from 'next/link'
 
 
 interface HomeProps {
@@ -96,6 +98,17 @@ export default function Dashboard({ user }: HomeProps) {
 
     }
 
+    const handleShare = async (id: string) => {
+        await navigator.clipboard.writeText(
+            `${process.env.NEXT_PUBLIC_URL}/task/${id}`
+        )
+    }
+
+    const handleDelete = async (id: string) => {
+        const docRef = doc(db, "tarefas", id)
+        await deleteDoc(docRef)
+    }
+
     return (
         <div className={styles.container}>
             <Head>
@@ -132,18 +145,23 @@ export default function Dashboard({ user }: HomeProps) {
                                 {item.public && (
                                     <div className={styles.tagContainer}>
                                         <label className={styles.tag}>Publico</label>
-                                        <button className={styles.shareButton}>
+                                        <button className={styles.shareButton} onClick={() => handleShare(item.id)}>
                                             <FiShare2 className={styles.FiShare2}
                                                 size={22}
-                                                color="#2f4f4f"
                                             />
                                         </button>
                                     </div>
                                 )}
 
                                 <div className={styles.taskContent}>
-                                    {item.tarefa}
-                                    <button className={styles.trashButton}>
+                                    {item.public ? (
+                                        <Link href={`/task/${item.id}`}>
+                                            <p>{item.tarefa}</p>
+                                        </Link>
+                                    ) : (
+                                        <p>{item.tarefa}</p>
+                                    )}
+                                    <button className={styles.trashButton} onClick={() => handleDelete(item.id)}>
                                         <FaTrash
                                             size={22}
                                             color="red"
